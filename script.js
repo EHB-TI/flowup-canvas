@@ -3,21 +3,15 @@
 //Require libraries
 const si = require('systeminformation');
 const validator = require('xsd-schema-validator');
-const xml2js = require('xml2js');
 
 //Global variables
 let cpuUsage = '';
-let datum = new Date();
 const errorCode = 2200;
-let format = '';
 let memUsage = '';
 let newXml = '';
 const successCode = 2000;
 let xml = '';
 
-
-// console.log(`2021-05-25T12:00:00+01:00`)
-// console.log(format);
 
 //1. Get CPU -and RAM usage
 let getUsage = () => {
@@ -35,39 +29,36 @@ let getUsage = () => {
 
         }).catch(error => console.error(error));
 
-        
-        //  2. Format object to XML
-        let heartbeatObject = {
-            heartbeat: {
-                header: {
-                    code: successCode, //TODO: Get correct code (success or error) 
-                    origin: 'Canvas',
-                    timestamp: `2021-05-25T12:00:00+01:00` //TODO: Format JS date to xs:DateTime
-                },
-                body: {
-                    nameService: "LMS",
-                    CPUload: cpuUsage,
-                    RAMload: memUsage
-                }
-            }
-        }
 
-        const builder = new xml2js.Builder();
-        xml = builder.buildObject(heartbeatObject);
+        //  2. Format date to xs:datetime and create the XML
+        let date = new Date();
+        date.setHours(date.getHours() + 2);
+        let formatted = date.toISOString();
 
-        
+        let heartbeatXml =
+            `<heartbeat>
+    <header>    
+        <code>${successCode}</code>    
+        <origin>Canvas</origin>    
+        <timestamp>${formatted}</timestamp>  
+    </header>  
+    <body>    
+        <nameService>LMS</nameService>
+        <CPUload>${cpuUsage}</CPUload>
+        <RAMload>${memUsage}</RAMload>
+    </body>
+</heartbeat>`
+
         //  3. Validate previously created XML, change code attribute value if error
-        validator.validateXML(xml, './heartbeatValidator.xsd', (err, result) => {
+        validator.validateXML(heartbeatXml, './heartbeatValidator.xsd', (err, result) => {
 
             if (err) {
-
                 newXml = xml.replace(`<code>${successCode}</code>`, `<code>${errorCode}</code>`);
                 reject(newXml);
-
-            } else {
-
+            } 
+            else {
                 result.valid; // true
-                resolve(xml);
+                resolve(heartbeatXml);
             }
         });
     })
