@@ -28,7 +28,8 @@ module.exports.create_user = async (firstname, lastname, email, UUID) => {
     }
 
     try {
-        await axios.post(create_users_url, null, config);
+        let res_create = await axios.post(create_users_url, null, config);
+        return res_create.status;
     } catch (err) {
         console.log(err);
     }
