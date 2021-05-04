@@ -1,0 +1,23 @@
+{
+  "name": "flowup-canvas",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./MasterUUID/uuid_interact.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EHB-TI/flowup-canvas.git"
+  },
+  "author": "Abdirahman Mohamed Osman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EHB-TI/flowup-canvas/issues"
+  },
+  "homepage": "https://github.com/EHB-TI/flowup-canvas#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "mysql": "^2.18.1"
+  }
+}
