@@ -8,6 +8,8 @@
     "axios": "^0.21.1",
     "dotenv": "^8.2.0",
     "msql": "^1.0.3",
+    "mysql": "^2.18.1",
+    "uuid-buffer": "^1.0.3",
     "xml2js": "^0.4.23",
     "xsd-schema-validator": "^0.6.0"
   },
@@ -21,5 +23,6 @@
   },
   "keywords": [],
   "author": "Abdirahman Mohamed Osman",
-  "license": "ISC"
+  "license": "ISC",
+  "homepage": "https://github.com/EHB-TI/flowup-canvas#readme"
 }
