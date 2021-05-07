@@ -136,7 +136,8 @@ const headers = {
       
       let data = {
         "name": `${jsonObject.event.body.name}`,
-        "description": `${jsonObject.event.body.description}`
+        "description": `${jsonObject.event.body.description}`,
+        "sis_group_id": `${jsonObject.event.header.UUID}`
       };
 
 
