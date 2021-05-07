@@ -20,14 +20,14 @@ amqp.connect('amqps://jpsjfzok:aqK80LcE0eNhVHNfH2PQMlqsj1B5pwSB@kangaroo.rmq.clo
 
     <event>
         <header>
-            <UUID>5698cd59-3acc-4f15-9ce2-83545cbfe0ba</UUID>
+            <UUID>3698cd59-3acc-4f15-9ce2-83545cbfe0ba</UUID>
             <organiserUUID>333ade47-03d1-40bb-9912-9a6c86a60169</organiserUUID>
-            <method>UPDATE</method>
+            <method>DELETE</method>
             <origin>FrontEnd</origin>
             <timestamp>2021-05-25T12:00:00+01:00</timestamp>
         </header>
         <body>
-            <name>testEvent</name>
+            <name>DhB3Update</name>
             <startEvent>2021-05-25T12:00:00</startEvent>
             <endEvent>2021-05-27T02:00:00</endEvent>
             <description>Desiderius hogeschool Brussel gaat op uistap met alle studenten naar Tomorrowland, Poggers!</description>

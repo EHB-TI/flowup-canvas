@@ -41,9 +41,11 @@ const headers = {
 
     try {
       let response = await axios.post(`http://10.3.56.4/api/v1/group_categories/${id}/groups`, null, config);
+      
       return response.data;
     } catch (error) {
-      console.error(error);
+      
+      return "Event bestaat al of UUID al gebruikt";
     }
 
   }
@@ -63,7 +65,7 @@ const headers = {
       let response = await axios.put(`http://10.3.56.4/api/v1/groups/${id}`, null, config);
       return response.data;
     } catch (error) {
-      console.error(error);
+      return "Event met dit UUID is verwijderd of bestaat niet";
     }
 
   }
@@ -75,7 +77,7 @@ const headers = {
       let response = await axios.delete(`http://10.3.56.4/api/v1/groups/${id}`,{headers});
       return response.data;
     } catch (error) {
-      console.error(error);
+      return "Event met dit UUID bestaat niet";
     }
 
   }
@@ -88,7 +90,7 @@ const headers = {
       let response = await axios.get('http://10.3.56.4/api/v1/courses',{headers});
       return response.data;
     } catch (error) {
-      console.error(error);
+      return "Geen response van canvas";
     }
     
 
@@ -96,14 +98,13 @@ const headers = {
 
   module.exports.createEvent =  async (jsonObject) => {
 
-    let eventExists = false;
     let event;
     let courseID;
     let groupCategorieID;
 
     let courses = await getCourses();
 
-    console.log(courses);
+    
     for (let course of courses) {
       if (course.name == "Events") {
         courseID = course.id;
@@ -119,45 +120,79 @@ const headers = {
 
     }
 
-    let groups = await getGroups(courseID);
+    
 
     
     
-    for(let group of groups) {
-      console.log(group);
-      
-      if (group.name == jsonObject.event.body.name) {
-        eventExists = true;
-      }
-    }
-    
-    
-    if (eventExists == false) {
+   
       
       let data = {
-        "name": `${jsonObject.event.body.name}`,
-        "description": `${jsonObject.event.body.description}`,
-        "sis_group_id": `${jsonObject.event.header.UUID}`
+        "name": jsonObject.event.body.name,
+        "description": jsonObject.event.body.description,
+        "sis_group_id": jsonObject.event.header.UUID
+        
       };
 
-
       event = await createGroup(groupCategorieID,data);
-    }
-
-    else{
-      event = "Event with this name already exist";
-    }
-    
+      
+      
     return event;
   }
 
   module.exports.updateEvent =  async (jsonObject) =>{
 
     
+    let eventExists = false;
+        let courseID;
+        let groupID;
+        let event;
 
+       
+        
+
+        let courses = await getCourses();
+        for (let course of courses) {
+          if (course.name == "Events") {
+            courseID = course.id;
+          }
+        }
+
+        
+
+        let groups = await getGroups(courseID);
+        for (let group of groups) {
+          if (group.sis_group_id == jsonObject.event.header.UUID) {
+            eventExists = true;
+            groupID = group.id;
+          }
+        }
+
+        if(eventExists == true)
+        {
+            
+          let data = {
+            "name": jsonObject.event.body.name,
+            "description": jsonObject.event.body.description,
+            "sis_group_id": jsonObject.event.header.UUID
+          };
+    
+    
+          event = await updateGroup(groupID,data);
+        }
+
+        else {
+          event = "No such event";
+
+        }
+
+        
+        
+
+        return event;
   }
 
   module.exports.deleteEvent =  async (jsonObject) =>{
+    
 
     let eventExists = false;
         let courseID;
@@ -178,7 +213,7 @@ const headers = {
 
         let groups = await getGroups(courseID);
         for (let group of groups) {
-          if (group.name == jsonObject.event.body.name) {
+          if (group.sis_group_id == jsonObject.event.header.UUID) {
             eventExists = true;
             groupID = group.id;
           }
@@ -187,13 +222,14 @@ const headers = {
         if(eventExists == true)
         {
             
-            event = deleteGroup(groupID);
+            event = await deleteGroup(groupID);
         }
 
-        else{
-          event = "Event with this name don't exist";
+        else {
+          event = "No such event";
+
         }
-        
+
 
         return event;
 

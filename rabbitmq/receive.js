@@ -25,11 +25,11 @@ amqp.connect('amqps://jpsjfzok:aqK80LcE0eNhVHNfH2PQMlqsj1B5pwSB@kangaroo.rmq.clo
 
 
 
-    channel.consume(queue, function (msg) {
+    channel.consume(queue,async function (msg) {
 
       let xml = msg.content.toString();
 
-      validator.validateXML(xml, '../xsd/schemaValidator.xsd', function (err, result) {
+      validator.validateXML(xml, './xsd/schemaValidator.xsd', function (err, result) {
         if (err) {
           throw err;
         }
@@ -39,22 +39,37 @@ amqp.connect('amqps://jpsjfzok:aqK80LcE0eNhVHNfH2PQMlqsj1B5pwSB@kangaroo.rmq.clo
 
       let jsonObject = JSON.parse(parser.toJson(xml));
       let method = jsonObject.event.header.method;
-      method = JSON.stringify(method);
+     
 
-      let data = ``;
+     
 
       
 
-      method = JSON.stringify(method);
+      
 
 
-      let objectt = {
-        "CREATE": createEvent(jsonObject),
-        "UPDATE": updateEvent(jsonObject),
-        "DELETE": deleteEvent(jsonObject)
-      }
+     switch (method) {
+       case "CREATE":
 
-      objectt.method;
+         console.log(await createEvent(jsonObject));
+         
+         break;
+
+      case "UPDATE":
+        console.log(await updateEvent(jsonObject));
+         
+         break;
+
+      case "DELETE":
+        console.log(await deleteEvent(jsonObject));
+         
+         break;
+     
+       default:
+         break;
+     }
+
+      
 
 
       /*
