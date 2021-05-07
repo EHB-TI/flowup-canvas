@@ -1,7 +1,9 @@
 const amqp = require('amqplib');
 const xml2js = require('xml2js');
 const {UserHelper} = require('../Helpers/userHelper.js');
+const {EventHelper} = require("../Helpers/eventHelper.js");
 const {User} = require("../DTO/user.js");
+const {Event} = require("../DTO/event.js");
 
 
 require('dotenv').config();
@@ -17,8 +19,6 @@ const parser = new xml2js.Parser( /* options */ );
         const exchange = "direct_logs";
         const types = ["user", "events"];
 
-        
-
         channel.assertExchange(exchange, 'direct', {
             durable: false
           });
@@ -26,9 +26,6 @@ const parser = new xml2js.Parser( /* options */ );
         const q = await channel.assertQueue('', {
             exclusive: true
         });
-
-        console.log(q);
-
 
         for(let type of types){
             channel.bindQueue(q.queue, exchange, type);
@@ -52,8 +49,14 @@ const parser = new xml2js.Parser( /* options */ );
                         channel.ack(msg);
                     }
                 }
-        
-                
+
+                else if (msg.fields.routingKey === "events"){
+                    let event = new Event(Body_info[0].name[0],Body_info[0].description[0],UUID_info[0].UUID[0]);
+                    let status = EventHelper.handle(event,method);
+                    if (status === 200){
+                        channel.ack(msg);
+                    }
+                }
             }).catch(err => {
                 console.log(err);
             });
