@@ -18,6 +18,7 @@
   "homepage": "https://github.com/EHB-TI/flowup-canvas#readme",
   "dependencies": {
     "dotenv": "^8.2.0",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "uuid-buffer": "^1.0.3"
   }
 }

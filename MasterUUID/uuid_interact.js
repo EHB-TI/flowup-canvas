@@ -1,4 +1,5 @@
 const pool = require("../Db/db.js");
+const uuidBuffer = require('uuid-buffer');
 
 module.exports.uuid_exists = (UUID, source) => {
   return new Promise((resolve,reject) => 
@@ -41,4 +42,15 @@ module.exports.update = (UUID,entitytype,entityversion,source) => {
       }
       resolve(results);
   })).catch(err => console.log(err));
+}
+
+module.exports.delete_uuid = (UUID,source) => {
+  return Promise((resolve,reject) =>
+  pool.query('DELETE FROM VoorbeeldTabel WHERE UUID = UUID_TO_BIN(?) AND source = ?' , [UUID,source],function(error,results){
+        if (error){
+           reject(error);
+        }
+        resolve(results);
+    })
+  );
 }
