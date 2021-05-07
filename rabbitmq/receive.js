@@ -34,7 +34,7 @@ amqp.connect('amqps://jpsjfzok:aqK80LcE0eNhVHNfH2PQMlqsj1B5pwSB@kangaroo.rmq.clo
           throw err;
         }
 
-        console.log(result.valid); // true
+        
       });
 
       let jsonObject = JSON.parse(parser.toJson(xml));
