@@ -29,12 +29,13 @@ const get_source_entityID = (uuid) => {
 
   // query local DB
     return new Promise((resolve,reject) => {
-       pool2.query("SELECT id FROM SourceEntityTable WHERE uuid = UUID_TO_BIN(?)", [uuid],(error, results) => {       
+       pool2.query("SELECT id FROM SourceEntityTable WHERE UUID = UUID_TO_BIN(?)", [uuid],(error, results) => {       
         if (error){
            reject(error);
          }
+ 
         if (results.length > 0){
-         resolve(results[0].id);
+          resolve(results[0].id);
         }
         else{
           resolve(undefined);
@@ -99,6 +100,7 @@ module.exports.update = async(UUID,entitytype,entityversion,source) => {
 
 module.exports.delete_uuid = async(UUID,source,entitytype) => {
 
+
   // fetch the source entity ID from our local DB
   let source_entityID = await get_source_entityID(UUID);
 
@@ -110,5 +112,11 @@ module.exports.delete_uuid = async(UUID,source,entitytype) => {
         }
         resolve(results);
     })
+  ).then(
+    pool2.query('DELETE FROM SourceEntityTable WHERE UUID = UUID_TO_BIN(?)' , [UUID],function(error,results){
+      if (error){
+         throw error;
+      }
+  })
   );
 }

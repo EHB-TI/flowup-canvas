@@ -10,6 +10,7 @@ class UUIDHelper {
     // If the method is DELETE , remove the row from the table
        if (method === "DELETE"){
         await delete_uuid(uuid,source,entitytype);
+        return;
        }
 
        let exists = await uuid_exists(uuid,source,entitytype);
