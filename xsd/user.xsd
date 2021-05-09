@@ -25,11 +25,18 @@
                             <xs:element name="origin">
                                 <xs:simpleType>
                                     <xs:restriction base="xs:string">
-                                        <xs:pattern value="(AD|FrontEnd|Canvas|Monitor|Office)" />
+                                        <xs:pattern value="(AD|FrontEnd|Canvas|Monitor|Office|Control)" />
                                     </xs:restriction>
                                 </xs:simpleType>
                             </xs:element>
-                            <xs:element name="timeStamp" type="xs:dateTime" />
+                            <xs:element name="version">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:integer">
+                                        <xs:minInclusive value="1"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element name="timestamp" type="xs:dateTime" />
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
@@ -61,7 +68,7 @@
                             <xs:element name="role">
                                 <xs:simpleType>
                                     <xs:restriction base="xs:string">
-                                        <xs:pattern value="[a-zA-Z -]{1,16}" />
+                                        <xs:pattern value="(student|tutor|admin)" />
                                     </xs:restriction>
                                 </xs:simpleType>
                             </xs:element>
