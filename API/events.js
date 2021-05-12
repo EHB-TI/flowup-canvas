@@ -1,13 +1,14 @@
 const axios = require('axios');
 require('dotenv').config();
-const api = process.env.API_Token;
 
 const headers = {
-  'Content-Type': 'application/json',
-  'Authorization': `Bearer ${api}`
-};
+  "Content-type": "application/json",
+  "Authorization": `Bearer ${process.env.API_token}`
+}
 
 const get_group = "http://10.3.56.4/api/v1/groups/sis_group_id:";
+
+const get_user_url = "http://10.3.56.4/api/v1/users/sis_user_id:";
 
 async function getGroupCategorys(id) {
 
@@ -95,10 +96,10 @@ async function getCourse(name){
       return course.id;
     }
   }
-  return undefined;
 }
 
 module.exports.createEvent = async (event) => {
+
   let groupCategorieID;
 
   let courseID = await getCourse("Events");
@@ -125,6 +126,7 @@ module.exports.createEvent = async (event) => {
 }
 
 module.exports.updateEvent = async (event) => {
+  
   let data = {
       "name": event.name,
       "description": event.description,
