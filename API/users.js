@@ -11,8 +11,13 @@ const headers = {
     "Authorization": `Bearer ${process.env.API_token}`
 }
 
-module.exports.create_user = async (firstname, lastname, email, UUID) => {
+// enrollment endpoint (The sis_course_id = uuid = JriMOZgusPGbGtcm5ssDfGhRQRvFCgT0Pc4FDh8S)
+const get_course_event = "http://10.3.56.4/api/v1/courses/sis_course_id:JriMOZgusPGbGtcm5ssDfGhRQRvFCgT0Pc4FDh8S/enrollments" 
 
+module.exports.create_user = async (firstname, lastname, email, UUID) => {
+    // First create the user and automatically enroll that user to the course events (similar to intranet)
+
+    // config for creating the user
     const config = {
 
         params: {
@@ -28,12 +33,16 @@ module.exports.create_user = async (firstname, lastname, email, UUID) => {
     }
 
     try {
+        // create the user
         let res_create = await axios.post(create_users_url, null, config);
+
+        // when the user is created => enrollment of user to course Events
+        let create_enrollment = await axios.post(`${get_course_event}?enrollment[user_id]=sis_user_id:${UUID}&enrollment[type]=StudentEnrollment`, null,{headers});
         return res_create.status;
     } catch (err) {
         console.log(err);
     }
-}
+ }
 
 module.exports.update_user = async (firstname, lastname, email, UUID) => {
 
@@ -51,7 +60,7 @@ module.exports.update_user = async (firstname, lastname, email, UUID) => {
 
     try {
         let res_update = await axios.put(`${get_user_url}${UUID}`, null, config);
-        return res_update.status
+        return res_update.status;
     } 
     
     catch (err) {
