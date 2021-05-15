@@ -1,124 +1,39 @@
-const axios = require('axios');
-require('dotenv').config();
+const {axios,querystring}= require("./axios_config.js");
 
-const headers = {
-  "Content-type": "application/json",
-  "Authorization": `Bearer ${process.env.API_token}`
-}
+const get_group_endpoint = "/groups/sis_group_id:";
 
-const get_group = "http://10.3.56.4/api/v1/groups/sis_group_id:";
+const get_group_categories_endpoint = "/group_categories";
 
-const get_user_url = "http://10.3.56.4/api/v1/users/sis_user_id:";
+const get_groups_endpoint = "/groups";
 
-async function getGroupCategorys(id) {
-
-  try {
-    let response = await axios.get(`http://10.3.56.4/api/v1/courses/${id}/group_categories`, {
-      headers
-    });
-    return response;
-  } catch (error) {
-    console.error(error);
-  }
-
-}
-
-async function createGroup(id, body) {
-
-  const config = {
-
-    params: body,
-    headers: headers
-  }
-
-  try {
-    let response = await axios.post(`http://10.3.56.4/api/v1/group_categories/${id}/groups`, null, config);
-
-    return response;
-  } catch (error) {
-
-    throw error;
-  }
-
-}
-
-async function updateGroup(id, body) {
-
-  const config = {
-
-    params: body,
-    headers: headers
-  }
-
-  try {
-    let response = await axios.put(`${get_group}${id}`, null, config);
-    return response;
-  } 
-  catch (error) {
-    throw error;
-  }
-}
-
-
-async function deleteGroup(id) {
-
-  try {
-    let response = await axios.delete(`${get_group}${id}`, {
-      headers
-    });
-    return response;
-  } 
-  catch (error) {
-    throw error;
-  }
-
-}
-
-async function getCourses() {
-
-  try {
-    let response = await axios.get('http://10.3.56.4/api/v1/courses', {
-      headers
-    });
-    return response;
-  } 
-  catch (error) {
-    throw error;
-  }
-
-}
-
-async function getCourse(name){
-
-  let courses = await getCourses();
-  for (let course of courses.data) {
-    if (course.name == name) {
-      return course.id;
-    }
-  }
-}
+const get_eventcourse_endpoint = `/courses/sis_course_id:${process.env.SIS_EVENTCOURSE_ID}`;
 
 module.exports.createEvent = async (event) => {
 
   let groupCategorieID;
 
-  let courseID = await getCourse("Events");
-
-  let data = {
+  const data = {
     "name": event.name,
     "description": event.description,
     "sis_group_id": event.UUID
   };
 
   try {
-    let groupCategories = await getGroupCategorys(courseID);
+    // fetch the group categories of the course Events
+    const groupCategories = await axios.get(`${get_eventcourse_endpoint}${get_group_categories_endpoint}`);
+
+    // find the groupcategory "Events"
     for (let groupCategorie of groupCategories.data) {
         if (groupCategorie.name == "Events") {
            groupCategorieID = groupCategorie.id;
+           // go out of the loop if the id is found
+           break;
           }
         }
-     response = await createGroup(groupCategorieID, data);
-     return response.status;
+    
+    // add the event to the groupcategory "Events"
+     const response = await axios.post(`${get_group_categories_endpoint}/${groupCategorieID}${get_groups_endpoint}`, querystring.stringify({...data}));
+     return response.data.id;
   }
   catch(error){
     throw error;
@@ -127,14 +42,15 @@ module.exports.createEvent = async (event) => {
 
 module.exports.updateEvent = async (event) => {
   
-  let data = {
+  // data for updating the event
+  const data = {
       "name": event.name,
       "description": event.description,
   };
 
   try {
-    response = await updateGroup(event.UUID, data);
-    return response.status;
+    const response = await axios.put(`${get_group_endpoint}${event.UUID}`, querystring.stringify({...data}));
+    return response.data.id;
   }
 
   catch(error){
@@ -145,8 +61,7 @@ module.exports.updateEvent = async (event) => {
 module.exports.deleteEvent = async (event) => {
 
   try {
-    response = await deleteGroup(event.UUID);
-    return response.status;
+    await axios.delete(`${get_group_endpoint}${event.UUID}`);
   }
 
   catch(error){
