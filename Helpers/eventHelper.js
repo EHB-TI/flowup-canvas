@@ -15,7 +15,7 @@ class EventHelper {
             return updateEvent(event);
         }
 
-        else {
+        else if (method === "DELETE") {
             return deleteEvent(event);
         }
     }

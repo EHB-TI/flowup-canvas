@@ -15,7 +15,7 @@ class UserHelper {
             return update_user(user.firstname,user.lastname,user.email,user.UUID);
         }
 
-        else {
+        else if (method === "DELETE") {
             return delete_user(user.UUID);
         }
     }

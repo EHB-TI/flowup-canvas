@@ -32,7 +32,7 @@ module.exports.createEvent = async (event) => {
         }
     
     // add the event to the groupcategory "Events"
-     const response = await axios.post(`${get_group_categories_endpoint}/${groupCategorieID}${get_groups_endpoint}`, querystring.stringify({...data}));
+     let response = await axios.post(`${get_group_categories_endpoint}/${groupCategorieID}${get_groups_endpoint}`, querystring.stringify({...data}));
      return response.data.id;
   }
   catch(error){
@@ -49,7 +49,7 @@ module.exports.updateEvent = async (event) => {
   };
 
   try {
-    const response = await axios.put(`${get_group_endpoint}${event.UUID}`, querystring.stringify({...data}));
+    let response = await axios.put(`${get_group_endpoint}${event.UUID}`, querystring.stringify({...data}));
     return response.data.id;
   }
 

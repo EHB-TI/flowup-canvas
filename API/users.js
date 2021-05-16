@@ -60,8 +60,7 @@ module.exports.update_user = async (firstname, lastname, email, UUID) => {
 module.exports.delete_user = async (UUID) => {
 
     try {
-        let res_delete = await axios.delete(`${get_user_endpoint}${UUID}`);
-        return res_delete.status;
+        await axios.delete(`${get_user_endpoint}${UUID}`);
     } 
     catch (err) {
         console.log(err);

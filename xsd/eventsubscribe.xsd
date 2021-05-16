@@ -8,6 +8,13 @@
                 <xs:element name="header">
                     <xs:complexType>
                         <xs:sequence>
+                            <xs:element name="UUID">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:pattern value="[0-9A-Fa-f]{8}-?([0-9A-Fa-f]{4}-?){3}[0-9A-Fa-f]{12}" />
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
                             <xs:element name="method">
                                 <xs:simpleType>
                                     <xs:restriction base="xs:string">
@@ -19,6 +26,13 @@
                                 <xs:simpleType>
                                     <xs:restriction base="xs:string">
                                         <xs:pattern value="(AD|FrontEnd|Canvas|Monitor|Office|Control)" />
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element name="version">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:integer">
+                                        <xs:minInclusive value="1"/>
                                     </xs:restriction>
                                 </xs:simpleType>
                             </xs:element>

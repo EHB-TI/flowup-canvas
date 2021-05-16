@@ -18,7 +18,8 @@ module.exports.add_user_to_event = async(event_uuid, user_uuid) => {
 
     // create a membership 
     try {
-        await axios.post(`${get_group_endpoint}${event_uuid}${memberships_endpoint}`, querystring.stringify({user_id: id}));
+        let res = await axios.post(`${get_group_endpoint}${event_uuid}${memberships_endpoint}`, querystring.stringify({user_id: id}));
+        return res.data.id;
     }
    
     catch(err){
