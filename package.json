@@ -1,5 +1,5 @@
 {
-  "name": "test",
+  "name": "flowup-canvas",
   "version": "1.0.0",
   "description": "",
   "main": "./rabbitmq/send.js",
@@ -9,6 +9,7 @@
     "dotenv": "^8.2.0",
     "msql": "^1.0.3",
     "mysql": "^2.18.1",
+    "querystring": "^0.2.1",
     "uuid-buffer": "^1.0.3",
     "xml2js": "^0.4.23",
     "xsd-schema-validator": "^0.6.0"

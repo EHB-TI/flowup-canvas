@@ -7,10 +7,7 @@ const {Event} = require("../DTO/event.js");
 const {UUIDHelper} = require("../MasterUUID/uuid_helper.js");
 const {EventSubscription} = require("../DTO/eventsubscription.js");
 const {EventSubscribeHelper} = require("../Helpers/eventsubscribeHelper.js");
-
-
-require('dotenv').config();
-
+const validator = require('xsd-schema-validator');
 
 const parser = new xml2js.Parser( /* options */ );
 
@@ -36,8 +33,7 @@ const parser = new xml2js.Parser( /* options */ );
         for(let type of types){
             channel.bindQueue(queue, exchange, type);
         }
-        
-        channel.prefetch(1);
+
         channel.consume(queue, (msg) => {
 
             parser.parseStringPromise(msg.content.toString()).then(result => {
@@ -50,34 +46,60 @@ const parser = new xml2js.Parser( /* options */ );
 
                 const uuidhelper = new UUIDHelper();
 
-                // first talk to the DB , this is the same regardless of which type (user or event)
-                //uuidhelper.handleDb(UUID_info[0].UUID[0],source,type.charAt(0).toUpperCase() + type.slice(1),parseInt(UUID_info[0].version[0]),method);
- 
                 // if type is user => process the user
                 if (msg.fields.routingKey === "user"){
-                    let user = new User(Body_info[0].firstname[0],Body_info[0].lastname[0],Body_info[0].email[0],UUID_info[0].UUID[0]);
-                    let status = UserHelper.handle(user,method);
-                    console.log(`Status: ${status}`);
+
+                    validator.validateXML(msg.content.toString(), "./xsd/user.xsd", (err, result) => {
+                        if (err){
+                            throw err;
+                        }
+                        if (result.valid){
+                            let user = new User(Body_info[0].firstname[0],Body_info[0].lastname[0],Body_info[0].email[0],UUID_info[0].UUID[0]);
+                            UserHelper.handle(user,method).then(id => {
+                                uuidhelper.handleDb(UUID_info[0].UUID[0],source,type.charAt(0).toUpperCase() + type.slice(1),parseInt(UUID_info[0].version[0]),method,id);
+                            });
+                        }
+                    });
                 }
 
                 // if type is user => process the event
                 else if (msg.fields.routingKey === "event"){
-                    let event = new Event(Body_info[0].name[0],Body_info[0].description[0],UUID_info[0].UUID[0]);
-                    let status = EventHelper.handle(event,method);
-                    console.log(`Status: ${status}`);
+                    
+                    validator.validateXML(msg.content.toString(), "./xsd/event.xsd", (err, result) => {
+                        if (err){
+                            throw err;
+                        }
+
+                        if (result.valid){
+                            let event = new Event(Body_info[0].name[0],Body_info[0].description[0],UUID_info[0].UUID[0]);
+                            EventHelper.handle(event,method).then(id => {
+                                uuidhelper.handleDb(UUID_info[0].UUID[0],source,type.charAt(0).toUpperCase() + type.slice(1),parseInt(UUID_info[0].version[0]),method,id);
+                            });
+                        }
+                    });
                 }
 
                 // if type eventsubscribe => add user to the event
                 else if (msg.fields.routingKey === "eventsubscribe"){
-                    let eventsubscription = new EventSubscription(Body_info[0].eventUUID[0],Body_info[0].attendeeUUID[0]); 
-                    EventSubscribeHelper.handle(eventsubscription,method);     
+
+                    validator.validateXML(msg.content.toString(), "./xsd/eventsubscribe.xsd", (err,result) => {
+                        if (err){
+                            throw err;
+                        }
+                        if (result.valid){
+                            let eventsubscription = new EventSubscription(Body_info[0].eventUUID[0],Body_info[0].attendeeUUID[0]); 
+                            EventSubscribeHelper.handle(eventsubscription,method).then(id => {
+                                uuidhelper.handleDb(UUID_info[0].UUID[0],source,type.charAt(0).toUpperCase() + type.slice(1),parseInt(UUID_info[0].version[0]),method,id);
+                            }); 
+                        }
+                    });    
                 }
 
             }).catch(err => {
                 console.log(err);
             });
-            channel.ack(msg);
             console.log(" [x] Received %s: %s",msg.fields.routingKey, msg.content.toString());
+            channel.ack(msg);
         }, {
             noAck: false
         });
