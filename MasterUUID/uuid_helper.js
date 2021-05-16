@@ -7,8 +7,8 @@ class UUIDHelper {
 
     async handleDb(uuid,source,entitytype,entityversion,method,source_entityID){
 
-    // If the method is DELETE , remove the row from the table
-       if (method === "DELETE"){
+    // If the method is DELETE or UNSUBSCRIBE , remove the row from the table
+       if (method === "DELETE" || method === "UNSUBSCRIBE"){
         await delete_uuid(uuid,source,entitytype);
         return;
         }
