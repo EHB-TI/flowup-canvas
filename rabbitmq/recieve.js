@@ -71,7 +71,7 @@ const parser = new xml2js.Parser( /* options */ );
                         }
 
                         if (result.valid){
-                            let event = new Event(Body_info[0].name[0],Body_info[0].description[0],UUID_info[0].UUID[0]);
+                            let event = new Event(Body_info[0].name[0],Body_info[0].description[0],UUID_info[0].UUID[0],UUID_info[0].organiserUUID[0]);
                             EventHelper.handle(event,method).then(id => {
                                 uuidhelper.handleDb(UUID_info[0].UUID[0],source,type.charAt(0).toUpperCase() + type.slice(1),parseInt(UUID_info[0].version[0]),method,id);
                             });
