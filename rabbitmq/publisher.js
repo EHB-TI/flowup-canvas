@@ -1,11 +1,10 @@
 'use strict';
 
 //Require libraries
-require('dotenv').config();
-let heartbeat = require('./script');
+let heartbeat = require('../Helpers/script.js');
 const amqp = require('amqplib/callback_api');
 
-(() => amqp.connect(process.env.RABBITMQ_SERVER, (error0, connection) => {
+(() => amqp.connect('amqp://10.3.56.6', (error0, connection) => {
 
     if (error0) {
         throw error0;
