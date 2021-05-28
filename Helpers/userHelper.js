@@ -8,15 +8,15 @@ class UserHelper {
     static handle(user,method){
 
         if (method === "CREATE"){
-            return create_user(user.firstname,user.lastname,user.email,user.UUID); 
+            return create_user(user.firstname,user.lastname,user.email); 
         }
 
         else if (method === "UPDATE"){
-            return update_user(user.firstname,user.lastname,user.email,user.UUID);
+            return update_user(user.firstname,user.lastname,user.email,user.id);
         }
 
         else if (method === "DELETE") {
-            return delete_user(user.UUID);
+            return delete_user(user.id);
         }
     }
 }
