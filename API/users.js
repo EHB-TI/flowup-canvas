@@ -65,7 +65,15 @@ module.exports.update_user = async (firstname, lastname, email, id) => {
 module.exports.delete_user = async (id) => {
 
     try {
-        await axios.delete(`${get_user_endpoint}${id}`);
+    let response = await axios.delete(`${get_user_endpoint}${id}`);
+
+    
+
+    // check if the user is properly deleted
+    if (response.status === 200){
+        return response.data.status;
+     }
+
     } catch (err) {
         console.log(err);
     }

@@ -59,7 +59,7 @@ module.exports.updateEvent = async (event) => {
     // update the event
     await axios.put(`${get_group_endpoint}${event.id}`, querystring.stringify({...data}));
 
-    // in case the organizer has unsubscribed or there is a different organizer => add user to event (this will do nothing if the user is already added)
+    // in case the organizer has unsubscribed or there is a different organiser => add user to event (this will do nothing if the user is already added)
     await add_user_to_event(event.id, event.organiser_id);
     return event.id;
   }
@@ -72,7 +72,16 @@ module.exports.updateEvent = async (event) => {
 module.exports.deleteEvent = async (event) => {
 
   try {
-    await axios.delete(`${get_group_endpoint}${event.id}`);
+   let response =  await axios.delete(`${get_group_endpoint}${event.id}`);
+   
+   
+
+   
+    // check if the event is properly deleted
+    if (response.status === 200){
+      return response.data.id;
+   }
+
   }
 
   catch(error){

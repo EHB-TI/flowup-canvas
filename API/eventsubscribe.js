@@ -24,7 +24,15 @@ module.exports.remove_user_from_event = async(event_id, user_id) => {
 
     // Remove the user from the group 
     try {
-        await axios.delete(`${get_group_endpoint}${event_id}${get_user_endpoint}${user_id}`);
+
+    let response = await axios.delete(`${get_group_endpoint}${event_id}${get_user_endpoint}${user_id}`);
+    
+
+        // check if the user is properly deleted
+    if (response.status === 200){
+        return response.data.ok;
+     }
+
     }
    
     catch(err){

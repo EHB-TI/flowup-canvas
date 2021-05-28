@@ -7,6 +7,7 @@
     "amqplib": "^0.7.1",
     "axios": "^0.21.1",
     "dotenv": "^8.2.0",
+    "mocha": "^8.4.0",
     "msql": "^1.0.3",
     "mysql": "^2.18.1",
     "querystring": "^0.2.1",
@@ -15,10 +16,11 @@
     "xsd-schema-validator": "^0.6.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.13.15"
+    "@babel/core": "^7.13.15",
+    "chai": "^4.3.4"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "publish": "node  ./rabbitmq/send.js",
     "consume": "node ./rabbitmq/recieve.js"
   },
