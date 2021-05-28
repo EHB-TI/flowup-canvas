@@ -104,7 +104,7 @@ const builder = new xml2js.Builder();
                 }
                  
                 // check if the routing key is user
-                if (msg.fields.routingKey === "userTest") {
+                if (msg.fields.routingKey === "user") {
                     
                      // xsd validation
                     validator.validateXML(msg.content.toString(), "./xsd/user.xsd", (err, result) => {
@@ -121,7 +121,7 @@ const builder = new xml2js.Builder();
                 }
 
                 // check if the routing key is event
-                else if (msg.fields.routingKey === "eventTest") {
+                else if (msg.fields.routingKey === "event") {
 
                     // check if the xml object that is passed is an event
                     if (type === "event"){
