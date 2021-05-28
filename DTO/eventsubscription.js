@@ -1,10 +1,9 @@
 class EventSubscription {
 
-    constructor(event_uuid,user_uuid){
-        this.event_uuid = event_uuid;
-        this.user_uuid = user_uuid;
+    constructor(event_id,user_id){
+        this.event_id = event_id;
+        this.user_id = user_id;
     }
 
 }
-
 module.exports.EventSubscription = EventSubscription;

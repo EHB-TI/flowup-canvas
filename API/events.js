@@ -1,6 +1,7 @@
 const {axios,querystring}= require("./axios_config.js");
+const {add_user_to_event} = require("../API/eventsubscribe.js");
 
-const get_group_endpoint = "/groups/sis_group_id:";
+const get_group_endpoint= "/groups/";
 
 const get_group_categories_endpoint = "/group_categories";
 
@@ -15,7 +16,6 @@ module.exports.createEvent = async (event) => {
   const data = {
     "name": event.name,
     "description": event.description,
-    "sis_group_id": event.UUID
   };
 
   try {
@@ -33,7 +33,14 @@ module.exports.createEvent = async (event) => {
     
     // add the event to the groupcategory "Events"
      let response = await axios.post(`${get_group_categories_endpoint}/${groupCategorieID}${get_groups_endpoint}`, querystring.stringify({...data}));
-     return response.data.id;
+
+     // check if the event is properly added
+     if (response.status === 200){
+        await add_user_to_event(response.data.id, event.organiser_id);
+        return response.data.id;
+     }
+
+     return undefined;
   }
   catch(error){
     throw error;
@@ -49,8 +56,12 @@ module.exports.updateEvent = async (event) => {
   };
 
   try {
-    let response = await axios.put(`${get_group_endpoint}${event.UUID}`, querystring.stringify({...data}));
-    return response.data.id;
+    // update the event
+    await axios.put(`${get_group_endpoint}${event.id}`, querystring.stringify({...data}));
+
+    // in case the organizer has unsubscribed or there is a different organizer => add user to event (this will do nothing if the user is already added)
+    await add_user_to_event(event.id, event.organiser_id);
+    return event.id;
   }
 
   catch(error){
@@ -61,7 +72,7 @@ module.exports.updateEvent = async (event) => {
 module.exports.deleteEvent = async (event) => {
 
   try {
-    await axios.delete(`${get_group_endpoint}${event.UUID}`);
+    await axios.delete(`${get_group_endpoint}${event.id}`);
   }
 
   catch(error){
