@@ -10,9 +10,9 @@
   "license": "ISC",
   "dependencies": {
     "amqplib": "^0.7.1",
-    "dotenv": "^8.2.0",
+    "dotenv": "^8.6.0",
     "nodemon": "^2.0.7",
-    "systeminformation": "^5.6.12",
-    "xsd-schema-validator": "^0.6.0"
+    "systeminformation": "^5.7.4",
+    "xsd-schema-validator": "^0.7.0"
   }
 }
