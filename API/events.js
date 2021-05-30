@@ -1,5 +1,6 @@
 const {axios,querystring}= require("./axios_config.js");
 const {add_user_to_event} = require("../API/eventsubscribe.js");
+const {create_event_announcement } = require("../API/event_announcements"); 
 
 const get_group_endpoint= "/groups/";
 
@@ -40,7 +41,7 @@ module.exports.createEvent = async (event) => {
         return response.data.id;
      }
 
-     return undefined;
+     return response.status;
   }
   catch(error){
     throw error;
@@ -56,12 +57,17 @@ module.exports.updateEvent = async (event) => {
   };
 
   try {
-    // update the event
-    await axios.put(`${get_group_endpoint}${event.id}`, querystring.stringify({...data}));
 
-    // in case the organizer has unsubscribed or there is a different organiser => add user to event (this will do nothing if the user is already added)
-    await add_user_to_event(event.id, event.organiser_id);
-    return event.id;
+    // update the event
+    let response = await axios.put(`${get_group_endpoint}${event.id}`, querystring.stringify({...data}));
+    
+    if (response.status === 200){
+      // create a new announcement with the updated event data
+      await create_event_announcement(event);
+      return event.id;
+    }
+    
+    return response.status;
   }
 
   catch(error){
@@ -72,14 +78,8 @@ module.exports.updateEvent = async (event) => {
 module.exports.deleteEvent = async (event) => {
 
   try {
-   let response =  await axios.delete(`${get_group_endpoint}${event.id}`);
-   
-   
-    // check if the event is properly deleted
-    if (response.status === 200){
-      return response.data.id;
-   }
-
+    let response = await axios.delete(`${get_group_endpoint}${event.id}`);
+    return response.status;
   }
 
   catch(error){

@@ -13,10 +13,11 @@ const builder = new xml2js.Builder();
 (async function () {
 
     try {
+        
         const connection = await amqp.connect(process.env.AMQP_URL);
         const channel = await connection.createChannel();
         const exchange = "direct_logs";
-        const types = ["userTest", "eventTest", "eventsubscribe", "Canvas"];
+        const types = ["user", "event", "Canvas"];
         const queue = "Canvas";
         const origin = "Canvas";
         const uuid = "UUID";
@@ -58,7 +59,7 @@ const builder = new xml2js.Builder();
                                 obj.user.header[0].sourceEntityId[0] = id;
                                 // place the xml object on the exchange with the binding uuid
                                 channel.publish(exchange, uuid, Buffer.from(builder.buildObject(obj)));
-                            });
+                            }).catch(err => console.log(err));
                         }
                     });
                    }
@@ -71,19 +72,18 @@ const builder = new xml2js.Builder();
                         }
 
                         if (result.valid) {
-                            console.log(UUID_info[0].sourceEntityId[0]);
                             let event = new Event(Body_info[0].name[0], Body_info[0].description[0], UUID_info[0].sourceEntityId[0], UUID_info[0].organiserSourceEntityId[0]);
                             EventHelper.handle(event, method).then(id => {
                                 obj.event.header[0].origin[0] = origin;
                                 obj.event.header[0].sourceEntityId[0] = id;
                                 // place the xml object on the exchange with the binding uuid
                                 channel.publish(exchange, uuid, Buffer.from(builder.buildObject(obj)));
-                            });
+                            }).catch(err => console.log(err));
                         }
                     });
                    }
 
-                   else if (type === "eventsubscribe"){
+                   else if (type === "eventSubscribe"){
 
                         // xsd validation
                         validator.validateXML(msg.content.toString(), "./xsd/eventsubscribe.xsd", (err, result) => {
@@ -91,20 +91,20 @@ const builder = new xml2js.Builder();
                                 throw err;
                             }
                         if (result.valid) {
-                            let eventsubscription = new EventSubscription(Body_info[0].eventSourceEntityID[0], Body_info[0].attendeeSourceEntityID[0]);
+                            let eventsubscription = new EventSubscription(Body_info[0].eventSourceEntityId[0], Body_info[0].attendeeSourceEntityId[0]);
                             EventSubscribeHelper.handle(eventsubscription, method).then(id => {
-                                obj.eventsubscribe.header[0].origin[0] = origin;
-                                obj.eventsubscribe.header[0].sourceEntityId[0] = id;
+                                obj.eventSubscribe.header[0].origin[0] = origin;
+                                obj.eventSubscribe.header[0].sourceEntityId[0] = id;
                                 // place the xml object on the exchange with the binding uuid
                                 channel.publish(exchange, uuid, Buffer.from(builder.buildObject(obj)));
-                            });
+                            }).catch(err => console.log(err));
                         }
                     });
                    }
                 }
                  
                 // check if the routing key is user
-                if (msg.fields.routingKey === "userTest") {
+                if (msg.fields.routingKey === "user") {
                     
                      // xsd validation
                     validator.validateXML(msg.content.toString(), "./xsd/user.xsd", (err, result) => {
@@ -121,7 +121,7 @@ const builder = new xml2js.Builder();
                 }
 
                 // check if the routing key is event
-                else if (msg.fields.routingKey === "eventTest") {
+                else if (msg.fields.routingKey === "event") {
 
                     // check if the xml object that is passed is an event
                     if (type === "event"){
@@ -141,7 +141,7 @@ const builder = new xml2js.Builder();
                     }       
 
                     // check if the xml object that is passed is an eventsubscription
-                    else if (type === "eventsubscribe"){
+                    else if (type === "eventSubscribe"){
 
                         // xsd validation
                         validator.validateXML(msg.content.toString(), "./xsd/eventsubscribe.xsd", (err, result) => {
@@ -151,7 +151,7 @@ const builder = new xml2js.Builder();
     
                             if (result.valid) {
                                 // if the xsd is valid replace the origin to canvas an place the object on the exchange with binding uuid
-                                obj.event.header[0].origin[0] = origin;
+                                obj.eventSubscribe.header[0].origin[0] = origin;
                                 channel.publish(exchange, uuid, Buffer.from(builder.buildObject(obj)));
                             }
                         });

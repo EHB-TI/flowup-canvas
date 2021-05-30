@@ -9,7 +9,7 @@ const get_eventcourse_enrollments_endpoint = `/courses/sis_course_id:${process.e
 
 module.exports.create_user = async (firstname, lastname, email) => {
     // First create the user and automatically enroll that user to the course events (similar to intranet)
-
+    
     // query string parameters for creating a user
     const user_params = {
         "user[name]": `${firstname} ${lastname}`,
@@ -17,9 +17,15 @@ module.exports.create_user = async (firstname, lastname, email) => {
         "user[sortable_name]": lastname,
         "pseudonym[unique_id]": email,
     }
+
+    console.log("ok");
+
     try {
         // create the user
         let res_create = await axios.post(create_user_endpoint, querystring.stringify({ ...user_params }));
+        console.log("ok");
+
+        
 
         // check if the user is succesfully created 
         if (res_create.status === 200) {
@@ -36,7 +42,7 @@ module.exports.create_user = async (firstname, lastname, email) => {
             return user_id;
 
         }
-        return undefined;
+        return res_create.status;
     } 
     catch (err) {
         console.log(err.response.status);
@@ -51,30 +57,28 @@ module.exports.update_user = async (firstname, lastname, email, id) => {
         "user[name]": `${firstname} ${lastname}`,
         "user[short_name]": firstname,
         "user[sortable_name]": lastname,
-        "pseudonym[unique_id]": email
+        "user[email]": email
     }
 
     try {
+        
         let res_update = await axios.put(`${get_user_endpoint}${id}`, querystring.stringify({ ...params }));
-        return res_update.data.id;
+
+        if (res_update.status === 200){
+            return res_update.data.id;
+        }
+        return res_update.status;
     } 
     catch (err) {
-        console.log(err);
+        return err.response.status
     }
 }
 
 module.exports.delete_user = async (id) => {
 
     try {
-    let response = await axios.delete(`${get_user_endpoint}${id}`);
-
-    
-
-    // check if the user is properly deleted
-    if (response.status === 200){
-        return response.data.status;
-     }
-
+        let response = await axios.delete(`${get_user_endpoint}${id}`);
+        return response.status;
     } catch (err) {
         console.log(err);
     }
