@@ -29,7 +29,7 @@ describe('Create an event', function() {
     userID = await create_user(testUser.firstname,testUser.lastname,testUser.email,"1");
       
     //Create an instance of a event with the userID.
-    testEvent = new Event("testEvent","Event for Testing - description","1",userID);
+    testEvent = new Event("testEvent","Event for Testing;12:00;13:00;Brussel","1",userID);
 
     
     //ID of the event is returned after the event is created.
@@ -42,12 +42,14 @@ describe('Create an event', function() {
     })
   });
 
+  
+
 
   describe('Update an event', function() {
     it('Should return the id of the event when no errors occur',  async () => {
       
     //Instance of Event with the ID of the created Event.
-    testEvent = new Event("testEventUpdated","Event Updated - description",eventID,userID);
+    testEvent = new Event("testEventUpdated","Event for Testing;12:00;13:00;Brussel",eventID,userID);
   
     //ID of the event is returned after updating.
     assert.typeOf(await updateEvent(testEvent),"number");
@@ -55,13 +57,14 @@ describe('Create an event', function() {
   
     })
   });
+  
 
 
   describe('Update an event - 2', function() {
     it("Should return a 404 Http response because the userID don't exists",  async () => {
       
     //Instance of Event with a non-existing ID.
-    let testEvent = new Event("testEventUpdated","Event Updated - description",-1,userID);
+    let testEvent = new Event("testEventUpdated","Event for Testing;12:00;13:00;Brussel",-1,userID);
 
   
     assert.equal(await updateEvent(testEvent),404);
@@ -76,7 +79,7 @@ describe('Create an event', function() {
   it('Should return a 200 Http response when no errors occur',  async () => {
   
   //Instance of Event with the ID of the created Event.
-  let testEvent = new Event("testEvent","Event for Testing - description",eventID,userID);
+  let testEvent = new Event("testEvent","Event for Testing;12:00;13:00;Brussel",eventID,userID);
 
   //Delete the user for other tests
   await delete_user(userID);
@@ -87,5 +90,4 @@ describe('Create an event', function() {
   
   })
   });
-  
   

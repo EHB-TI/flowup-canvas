@@ -11,6 +11,8 @@ let testUser = new User("testFirstname","testLastname","testEmail@ehb.be","12");
 
 let UserID;
 
+
+
 describe('Create a user', function() {
     it('Should return the id of the user when no errors occur',  async () => {
       

@@ -2,6 +2,8 @@ const {axios,querystring}= require("./axios_config.js");
 const {add_user_to_event} = require("../API/eventsubscribe.js");
 const {create_event_announcement } = require("../API/event_announcements"); 
 
+const {createEventPDF } = require("../Helpers/pdfWriter"); 
+
 const get_group_endpoint= "/groups/";
 
 const get_group_categories_endpoint = "/group_categories";
@@ -38,13 +40,26 @@ module.exports.createEvent = async (event) => {
      // check if the event is properly added
      if (response.status === 200){
         await add_user_to_event(response.data.id, event.organiser_id);
+        
+
+        
+        let splitDescription = event.description.split(";");
+        let description = splitDescription[0];
+        let startEvent = splitDescription[1];
+        let endEvent = splitDescription[2];
+        let location = splitDescription[3];
+
+        createEventPDF(event.name,description,startEvent,endEvent,location);
+        
+
         return response.data.id;
+        
      }
 
   }
   catch(error){
-    
-    return errpr.response.status;
+    console.log(error);
+    return error.response.status;
     
   }
 }
@@ -65,6 +80,19 @@ module.exports.updateEvent = async (event) => {
     if (response.status === 200){
       // create a new announcement with the updated event data
       await create_event_announcement(event);
+
+      /*
+
+      let splitDescription = event.description.split(";");
+      let description = splitDescription[0];
+      let startEvent = splitDescription[1];
+      let endEvent = splitDescription[2];
+      let location = splitDescription[3];
+
+      createEventPDF(event.name,description,startEvent,endEvent,location);
+      */
+      
+
       return event.id;
     }
     

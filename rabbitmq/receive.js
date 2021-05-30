@@ -71,8 +71,10 @@ const builder = new xml2js.Builder();
                             throw err;
                         }
 
+                       let description =  `${Body_info[0].description[0]};${Body_info[0].startEvent[0]};${Body_info[0].endEvent[0]};${Body_info[0].location[0]}`
+
                         if (result.valid) {
-                            let event = new Event(Body_info[0].name[0], Body_info[0].description[0], UUID_info[0].sourceEntityId[0], UUID_info[0].organiserSourceEntityId[0]);
+                            let event = new Event(Body_info[0].name[0], description, UUID_info[0].sourceEntityId[0], UUID_info[0].organiserSourceEntityId[0]);
                             EventHelper.handle(event, method).then(id => {
                                 obj.event.header[0].origin[0] = origin;
                                 obj.event.header[0].sourceEntityId[0] = id;

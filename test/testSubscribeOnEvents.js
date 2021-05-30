@@ -26,6 +26,7 @@ let UserID;
 let subscriptionID;
 
 
+
 describe('Subscribe a user to an event', function() {
     it('Should return the id of the subscription when no errors occur',  async () => {
       
@@ -33,7 +34,7 @@ describe('Subscribe a user to an event', function() {
     userID = await create_user(testUser.firstname,testUser.lastname,testUser.email,"1");
 
     //Create an instance of a event with the userID.
-    testEvent = new Event("testEvent","Event for Testing - description","1",userID);
+    testEvent = new Event("testEvent","Event for Testing;12:00;13:00;Brussel","1",userID);
 
     //Create a event
     eventID = await createEvent(testEvent);
@@ -94,4 +95,5 @@ describe('Subscribe a user to an event', function() {
   
     })
   });
+  
   
