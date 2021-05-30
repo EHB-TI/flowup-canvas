@@ -1,0 +1,23 @@
+version: "3"
+services:
+    heartbeat:
+        build:
+            context: rabbitmqHeartbeat/   
+        image: heartbeat-sender 
+        container_name: heartbeat
+        restart: unless-stopped
+        environment: 
+            AMQP_URL: ${AMQP_URL}
+    canvasReceiver:
+        build:
+            context: rabbitmq/
+        image: receiver-canvas
+        container_name: receiver
+        restart: unless-stopped
+        environment: 
+            AMQP_URL: ${AMQP_URL}
+            API_TOKEN: ${API_TOKEN}
+            SIS_EVENTCOURSE_ID: ${SIS_EVENTCOURSE_ID}
+            BASEURL: ${BASEURL}
+
+  

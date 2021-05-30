@@ -22,7 +22,6 @@
   },
   "scripts": {
     "test": "mocha",
-    "publish": "node  ./rabbitmq/send.js",
     "consume": "node ./rabbitmq/receive.js"
   },
   "keywords": [],
