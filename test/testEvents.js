@@ -36,7 +36,7 @@ describe('Create an event', function() {
     eventID = await createEvent(testEvent);
 
 
-    assert.typeOf(await updateEvent(testEvent),"number");
+    assert.typeOf(eventID,"number");
     
 
     })
