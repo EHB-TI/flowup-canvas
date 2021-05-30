@@ -17,6 +17,7 @@ module.exports.create_user = async (firstname, lastname, email) => {
         "user[sortable_name]": lastname,
         "pseudonym[unique_id]": email,
     }
+
     try {
         // create the user
         let res_create = await axios.post(create_user_endpoint, querystring.stringify({ ...user_params }));
@@ -36,7 +37,7 @@ module.exports.create_user = async (firstname, lastname, email) => {
             return user_id;
 
         }
-        return undefined;
+        return res_create.status;
     } 
     catch (err) {
         console.log(err);
@@ -50,12 +51,16 @@ module.exports.update_user = async (firstname, lastname, email, id) => {
         "user[name]": `${firstname} ${lastname}`,
         "user[short_name]": firstname,
         "user[sortable_name]": lastname,
-        "pseudonym[unique_id]": email
+        "user[email]": email
     }
 
     try {
         let res_update = await axios.put(`${get_user_endpoint}${id}`, querystring.stringify({ ...params }));
-        return res_update.data.id;
+
+        if (res_update.status === 200){
+            return res_update.data.id;
+        }
+        return res_update.status;
     } 
     catch (err) {
         console.log(err);
@@ -65,7 +70,8 @@ module.exports.update_user = async (firstname, lastname, email, id) => {
 module.exports.delete_user = async (id) => {
 
     try {
-        await axios.delete(`${get_user_endpoint}${id}`);
+        let response = await axios.delete(`${get_user_endpoint}${id}`);
+        return response.status;
     } catch (err) {
         console.log(err);
     }

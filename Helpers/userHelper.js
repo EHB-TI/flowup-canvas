@@ -12,6 +12,8 @@ class UserHelper {
         }
 
         else if (method === "UPDATE"){
+            console.log("inside");
+            console.log(user.email);
             return update_user(user.firstname,user.lastname,user.email,user.id);
         }
 
