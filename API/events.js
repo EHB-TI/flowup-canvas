@@ -75,8 +75,6 @@ module.exports.deleteEvent = async (event) => {
    let response =  await axios.delete(`${get_group_endpoint}${event.id}`);
    
    
-
-   
     // check if the event is properly deleted
     if (response.status === 200){
       return response.data.id;

@@ -39,7 +39,8 @@ module.exports.create_user = async (firstname, lastname, email) => {
         return undefined;
     } 
     catch (err) {
-        console.log(err);
+        console.log(err.response.status);
+        return err.response.status;
     }
 }
 

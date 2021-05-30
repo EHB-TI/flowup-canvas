@@ -16,6 +16,7 @@ module.exports.add_user_to_event = async(event_id, user_id) => {
    
     catch(err){
         console.log(err);
+        return err.response.status;
     }    
 
 }
@@ -28,7 +29,7 @@ module.exports.remove_user_from_event = async(event_id, user_id) => {
     let response = await axios.delete(`${get_group_endpoint}${event_id}${get_user_endpoint}${user_id}`);
     
 
-        // check if the user is properly deleted
+    // check if the user is properly removed from the event.
     if (response.status === 200){
         return response.data.ok;
      }
@@ -37,6 +38,7 @@ module.exports.remove_user_from_event = async(event_id, user_id) => {
    
     catch(err){
         console.log(err);
+        return err.response.status;
     }    
 
 }
