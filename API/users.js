@@ -18,13 +18,13 @@ module.exports.create_user = async (firstname, lastname, email) => {
         "pseudonym[unique_id]": email,
     }
 
-    console.log("ok");
+    
 
     try {
+        
         // create the user
         let res_create = await axios.post(create_user_endpoint, querystring.stringify({ ...user_params }));
-        console.log("ok");
-
+        
         
 
         // check if the user is succesfully created 
@@ -42,10 +42,10 @@ module.exports.create_user = async (firstname, lastname, email) => {
             return user_id;
 
         }
-        return res_create.status;
+        
     } 
     catch (err) {
-        console.log(err.response.status);
+        
         return err.response.status;
     }
 }
@@ -67,10 +67,11 @@ module.exports.update_user = async (firstname, lastname, email, id) => {
         if (res_update.status === 200){
             return res_update.data.id;
         }
-        return res_update.status;
+        
     } 
     catch (err) {
-        return err.response.status
+        
+        return err.response.status;
     }
 }
 
@@ -79,7 +80,10 @@ module.exports.delete_user = async (id) => {
     try {
         let response = await axios.delete(`${get_user_endpoint}${id}`);
         return response.status;
-    } catch (err) {
-        console.log(err);
+    } 
+    catch (err) {
+        
+        
+        return err.response.status;
     }
 }

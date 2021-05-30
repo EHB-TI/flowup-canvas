@@ -14,11 +14,11 @@ module.exports.add_user_to_event = async(event_id, user_id) => {
         if (res.status === 200){
             return res.data.id;
         }
-        return res.status;
+        
     }
    
     catch(err){
-        console.log(err);
+        
         return err.response.status;
     }    
 
@@ -33,7 +33,7 @@ module.exports.remove_user_from_event = async(event_id, user_id) => {
     }
    
     catch(err){
-        console.log(err);
+        
         return err.response.status;
     }    
 

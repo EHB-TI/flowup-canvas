@@ -41,10 +41,11 @@ module.exports.createEvent = async (event) => {
         return response.data.id;
      }
 
-     return response.status;
   }
   catch(error){
-    throw error;
+    
+    return errpr.response.status;
+    
   }
 }
 
@@ -67,11 +68,13 @@ module.exports.updateEvent = async (event) => {
       return event.id;
     }
     
-    return response.status;
+    
   }
 
   catch(error){
-    throw error;
+    
+    return error.response.status;
+   
   }
 }
 
@@ -83,6 +86,8 @@ module.exports.deleteEvent = async (event) => {
   }
 
   catch(error){
-    throw error;
+    
+    return error.response.status;
+    
   }
 }
