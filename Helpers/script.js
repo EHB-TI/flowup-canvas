@@ -39,7 +39,7 @@ let getUsage = () => {
     <header>    
         <code>${successCode}</code>    
         <origin>Canvas</origin>    
-        <timestamp></timestamp>  
+        <timestamp>${formatted}</timestamp>  
     </header>  
     <body>    
         <nameService>LMS</nameService>
