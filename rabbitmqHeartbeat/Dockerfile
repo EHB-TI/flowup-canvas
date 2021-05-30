@@ -11,7 +11,12 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 RUN npm install
-
+RUN npm install amqplib
+RUN npm install systeminformation
+RUN npm install xsd-schema-validator
+RUN npm install xml2js
+RUN npm install --dotenv-extended
+RUN npm install dotenv
 # Bundle app source
 COPY . .
 

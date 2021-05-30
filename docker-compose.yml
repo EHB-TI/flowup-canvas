@@ -1,17 +1,25 @@
+# docker-compose down -v     (delete all images)
+# docker-compose up --build   (!werkt niet op VM ??)
+
+
+
 version: "3"
 services:
     heartbeat:
         build:
             context: rabbitmqHeartbeat/   
-        image: heartbeat-sender 
         container_name: heartbeat
         restart: unless-stopped
         environment: 
             AMQP_URL: ${AMQP_URL}
-    canvasReceiver:
+        volumes:
+            - ./Helpers:/usr/src/app/Helpers
+            - .env:/usr/src/app/Helpers/.env
+            - .env:/usr/src/app/.env
+ 
+    canvasreceiver:
         build:
             context: rabbitmq/
-        image: receiver-canvas
         container_name: receiver
         restart: unless-stopped
         environment: 
@@ -19,5 +27,13 @@ services:
             API_TOKEN: ${API_TOKEN}
             SIS_EVENTCOURSE_ID: ${SIS_EVENTCOURSE_ID}
             BASEURL: ${BASEURL}
+        volumes:
+            - ./API:/usr/src/app/API
+            - .env:/usr/src/app/.env
+            - .env:/usr/src/app/API/.env
+            - ./DTO:/usr/src/app/DTO
+            - .env:/usr/src/app/DTO/.env
+            - ./Helpers:/usr/src/app/Helpers
+            - .env:/usr/src/app/Helpers/.env
 
   
