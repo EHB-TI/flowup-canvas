@@ -30,7 +30,7 @@ describe('Create a user', function() {
   
 
   //ID of the User is returned after the user is created. 
-  userID = await create_user(testUser.firstname,testUser.lastname,testUser.email);
+  userID = await create_user(testUser.firstname,testUser.lastname,testUser.email,"1");
 
   
   assert.typeOf(userID,"number");
@@ -50,7 +50,7 @@ describe('Create a user - 2', function() {
   })
 });
 
-
+/*
 
 describe('Create an event', function() {
       it('Should return the id of the event when no errors occur',  async () => {
@@ -201,7 +201,7 @@ describe('Delete a user', function() {
 
 
 
-
+*/
 
 
 
