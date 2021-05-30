@@ -30,6 +30,8 @@ const amqp = require('amqplib/callback_api');
             heartbeat.getUsage()
                 .then((message) => {
 
+                    console.log(message); 
+
                     channel.publish(exchange, binding, Buffer.from(message));
                 })
                 .catch((message) => {
