@@ -15,47 +15,22 @@ const amqp = require('amqplib/callback_api');
             throw error1;
         }
 
-        // let queue = 'heartbeat';
-        let binding = 'heartbeat';
+        let queue = 'heartbeat';
 
-        //Send the heartbeat to the exchange, which will be redirected to the heartbeat queue. 
-        let exchange = 'direct_logs'; 
 
         setInterval(() => {
-
-            channel.assertExchange(exchange, 'direct', {
-                durable: false
-              });
-
             heartbeat.getUsage()
                 .then((message) => {
-
-                    console.log(message); 
-
-                    channel.publish(exchange, binding, Buffer.from(message));
+                    channel.sendToQueue(queue, Buffer.from(message));
+                    console.log(message);
                 })
                 .catch((message) => {
 
-                    channel.publish(exchange, binding, Buffer.from(message));
-                    console.error("An error happened with the XML. It didn't go through validation.")
+                    channel.sendToQueue(queue, Buffer.from(message));
+                    console.log(message);
+
+                    console.error("An error happened with the XML. It didn't go through validation.");
                 });
         }, 1000);
-    
-        //This code will send the heartbeat directly to the queue. 
-        // setInterval(() => {
-        //     heartbeat.getUsage()
-        //         .then((message) => {
-        //             channel.sendToQueue(queue, Buffer.from(message));
-        //             console.log(message);
-        //         })
-        //         .catch((message) => {
-
-        //             channel.sendToQueue(queue, Buffer.from(message));
-        //             console.log(message);
-
-        //             console.error("An error happened with the XML. It didn't go through validation.");
-        //         });
-        // }, 1000);
-
     });
 }))();
