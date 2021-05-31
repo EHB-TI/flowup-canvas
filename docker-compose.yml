@@ -1,21 +1,17 @@
-# docker-compose down -v     (delete all images)
-# docker-compose up --build   (!werkt niet op VM ??)
-
-
-
 version: "3"
 services:
     heartbeat:
         build:
-            context: rabbitmqHeartbeat/   
+            context: .
+            dockerfile: ./rabbitmqHeartbeat/Dockerfile
         container_name: heartbeat
         restart: unless-stopped
-        environment: 
-            AMQP_URL: ${AMQP_URL}
         volumes:
             - ./Helpers:/usr/src/app/Helpers
             - .env:/usr/src/app/Helpers/.env
             - .env:/usr/src/app/.env
+            - ./package.json:/usr/src/app/package.json
+            - ./rabbitmqHeartbeat:/usr/src/app/rabbitmqHeartbeat
  
     canvasreceiver:
         build:
@@ -35,5 +31,7 @@ services:
             - .env:/usr/src/app/DTO/.env
             - ./Helpers:/usr/src/app/Helpers
             - .env:/usr/src/app/Helpers/.env
+            - ./package.json:/usr/src/app/package.json
+            - ./rabbitmq:/usr/src/app/rabbitmq
 
   
