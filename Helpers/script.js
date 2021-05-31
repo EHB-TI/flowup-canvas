@@ -10,7 +10,6 @@ const errorCode = 2200;
 let memUsage = '';
 let newXml = '';
 const successCode = 2000;
-let xml = '';
 
 
 //1. Get CPU -and RAM usage
@@ -20,7 +19,7 @@ let getUsage = () => {
 
         await Promise.all([si.currentLoad(), si.mem()]).then(data => {
 
-            cpuUsage = data[0].currentLoad.toFixed(2);
+            cpuUsage = (data[0].currentLoad / 100).toFixed(2);
 
             let memoryUsage = data[1].total - (data[1].free + data[1].buffcache);
             memUsage = ((memoryUsage / data[1].total) * 100).toFixed(2);
@@ -50,13 +49,12 @@ let getUsage = () => {
 
         //  3. Validate previously created XML, change code attribute value if error
         validator.validateXML(heartbeatXml, '../xsd/heartbeat.xsd', (err, result) => {
-            
+
             if (err) {
 
                 newXml = heartbeatXml.replace(`<code>${successCode}</code>`, `<code>${errorCode}</code>`);
                 reject(newXml);
-            } 
-            else {
+            } else {
 
                 result.valid; // true
                 resolve(heartbeatXml);
