@@ -4,7 +4,7 @@ const groups_endpoint = "/groups/";
 
 const topics_endpoint = "/discussion_topics";
 
-// create an announcement every time an event is updated on the page of the group
+// create an announcement every time an event is updated or created
 module.exports.create_event_announcement = async(event) => {
    
     const params = {

@@ -37,14 +37,16 @@ module.exports.createEvent = async (event) => {
 
      // check if the event is properly added
      if (response.status === 200){
-        await add_user_to_event(response.data.id, event.organiser_id);
-        return response.data.id;
+      // add the organiser to the event
+      await add_user_to_event(response.data.id, event.organiser_id);
+      return response.data.id;
+
      }
 
   }
   catch(error){
     
-    return errpr.response.status;
+    return error.response.status;
     
   }
 }
