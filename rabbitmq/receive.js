@@ -41,18 +41,16 @@ const builder = new xml2js.Builder();
                 let type = Object.keys(obj)[0];
                 let Body_info = obj[type].body;
                 let UUID_info = obj[type].header;
-                let method = UUID_info[0].method[0];
-
                 // routing key to receive the xml objects from the masterUUID
-                if (msg.fields.routingKey === "Canvas"){
-                   if (type === "user"){
+                if (msg.fields.routingKey === "Canvas"){         
+                   if (type === "user"){   
                     // xsd validation
                     validator.validateXML(msg.content.toString(), "./xsd/user.xsd", (err, result) => {
                         if (err) {
                             throw err;
                         }
                         if (result.valid) {
-
+                            let method = UUID_info[0].method[0];
                             let user = new User(Body_info[0].firstname[0], Body_info[0].lastname[0], Body_info[0].email[0], UUID_info[0].sourceEntityId[0]);
                             UserHelper.handle(user, method).then(id => {
                                 obj.user.header[0].origin[0] = origin;
@@ -64,6 +62,12 @@ const builder = new xml2js.Builder();
                     });
                    }
 
+                   // error logging to monitoring 
+                    else if (type === "error"){
+                         // use the default exchange to send it to the queue logging
+                         channel.sendToQueue("logging",Buffer.from(builder.buildObject(obj)));
+                   }
+
                    else if (type === "event"){
                     // xsd validation
                     validator.validateXML(msg.content.toString(), "./xsd/event.xsd", (err, result) => {
@@ -72,6 +76,7 @@ const builder = new xml2js.Builder();
                         }
 
                         if (result.valid) {
+                            let method = UUID_info[0].method[0];
                             let event = new Event(Body_info[0].name[0], Body_info[0].description[0], UUID_info[0].sourceEntityId[0], UUID_info[0].organiserSourceEntityId[0]);
                             EventHelper.handle(event, method).then(id => {
                                 obj.event.header[0].origin[0] = origin;
@@ -91,6 +96,7 @@ const builder = new xml2js.Builder();
                                 throw err;
                             }
                         if (result.valid) {
+                            let method = UUID_info[0].method[0];
                             let eventsubscription = new EventSubscription(Body_info[0].eventSourceEntityId[0], Body_info[0].attendeeSourceEntityId[0]);
                             EventSubscribeHelper.handle(eventsubscription, method).then(id => {
                                 obj.eventSubscribe.header[0].origin[0] = origin;
