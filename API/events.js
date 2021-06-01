@@ -37,8 +37,13 @@ module.exports.createEvent = async (event) => {
 
      // check if the event is properly added
      if (response.status === 200){
+ 
+      // create a new announcement with the event data
+      event.id = response.data.id;
+      await create_event_announcement(event);
       // add the organiser to the event
       await add_user_to_event(response.data.id, event.organiser_id);
+      
       return response.data.id;
 
      }
@@ -56,7 +61,7 @@ module.exports.updateEvent = async (event) => {
   // data for updating the event
   const data = {
       "name": event.name,
-      "description": event.description,
+      "description": event.description.join("\n"),
   };
 
   try {

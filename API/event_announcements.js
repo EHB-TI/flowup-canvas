@@ -6,10 +6,10 @@ const topics_endpoint = "/discussion_topics";
 
 // create an announcement every time an event is updated or created
 module.exports.create_event_announcement = async(event) => {
-   
+
     const params = {
         "title": event.name,
-        "message": event.description,
+        "message": event.description.join("\n"),
         "is_announcement": true
     }
 

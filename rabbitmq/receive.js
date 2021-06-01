@@ -77,7 +77,9 @@ const builder = new xml2js.Builder();
 
                         if (result.valid) {
                             let method = UUID_info[0].method[0];
-                            let event = new Event(Body_info[0].name[0], Body_info[0].description[0], UUID_info[0].sourceEntityId[0], UUID_info[0].organiserSourceEntityId[0]);
+                            // CREATE THE STRING TO DISPLAY IN THE ANNOUNCEMENTS
+                            let description = [Body_info[0].description[0], `Start: ${Body_info[0].startEvent[0].replace("T", " ")}`, `End: ${Body_info[0].endEvent[0].replace("T", " ")}`];
+                            let event = new Event(Body_info[0].name[0], description, UUID_info[0].sourceEntityId[0], UUID_info[0].organiserSourceEntityId[0]);
                             EventHelper.handle(event, method).then(id => {
                                 obj.event.header[0].origin[0] = origin;
                                 obj.event.header[0].sourceEntityId[0] = id;
@@ -131,7 +133,6 @@ const builder = new xml2js.Builder();
 
                     // check if the xml object that is passed is an event
                     if (type === "event"){
-
                         // xsd validation
                         validator.validateXML(msg.content.toString(), "./xsd/event.xsd", (err, result) => {
                             if (err) {
