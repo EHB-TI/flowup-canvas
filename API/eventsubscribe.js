@@ -1,5 +1,4 @@
 const {axios, querystring} = require('./axios_config.js');
-
 const get_group_endpoint = "/groups/";
 
 const get_user_endpoint = "/users/";
