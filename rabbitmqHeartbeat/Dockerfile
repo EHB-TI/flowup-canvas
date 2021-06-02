@@ -16,4 +16,4 @@ RUN npm install
 # Bundle app source
 COPY . .
 
-CMD ["node", "publisher.js"]
+CMD ["node", "./rabbitmqHeartbeat/publisher.js"]

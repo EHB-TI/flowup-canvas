@@ -18,4 +18,4 @@ COPY . .
 
 RUN ls
 # Start our npm script to run RabbitMQ receiver
-CMD ["node", "receive.js"]
+CMD ["node", "./rabbitmq/receive.js"]
