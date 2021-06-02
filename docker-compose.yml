@@ -15,7 +15,8 @@ services:
  
     canvasreceiver:
         build:
-            context: rabbitmq/
+            context: .
+            dockerfile: ./rabbitmq/Dockerfile
         container_name: receiver
         restart: unless-stopped
         environment: 
