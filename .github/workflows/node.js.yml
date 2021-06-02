@@ -29,8 +29,10 @@ jobs:
     - run: bash init.sh
     - run: npm ci
     - run: npm run build --if-present
-    - run: CI=true npm test-headless
+    - run: npm test
       env:
         CI: true 
+    - name: Publish Docker
+      if: success()
     - run: bash startup.sh
 
