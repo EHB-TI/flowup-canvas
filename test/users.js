@@ -59,7 +59,7 @@ describe('Users Crud Test', function(){
 
     it('Should return a 200 Http response message when no errors occur',  async () => {
     
-      let status = await delete_user(userID);
+      let status = await delete_user(testUser.id);
       assert.equal(status,200);
   
   

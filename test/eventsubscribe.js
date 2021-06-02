@@ -22,7 +22,7 @@ before(async() => {
    testUser.id = userID;
 
    //Create an instance of a event with the userID.
-   testEvent = new Event("testEvent","Event for Testing - description",undefined,userID);
+   testEvent = new Event("testEvent",["Event for Testing - description", "2021-05-25 23:00:00", "2021-05-27 02:00:00"],undefined,userID);
 
    //Create a event
    eventID = await createEvent(testEvent);

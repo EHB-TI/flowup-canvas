@@ -22,7 +22,7 @@ describe('Events crud', function () {
     testUser.id = userID;
 
     //Create an instance of a event with the userID.
-    testEvent = new Event("testEvent", "Event for Testing - description",undefined, testUser.id);
+    testEvent = new Event("testEvent", ["Event for Testing - description", "2021-05-25 23:00:00", "2021-05-27 02:00:00"] ,undefined, testUser.id);
 
     //ID of the event is returned after the event is created.
     eventID = await createEvent(testEvent);
@@ -52,7 +52,7 @@ describe('Events crud', function () {
     it("Should return a 404 Http response because the EventID doesn't exist", async () => {
 
       //Instance of Event with a non-existing ID.
-      let fakeEvent = new Event("testEventUpdated", "Event Updated - description", -1, testUser.id);
+      let fakeEvent = new Event("testEventUpdated", ["Event for Testing - description", "2021-05-25 23:00:00", "2021-05-27 02:00:00"], -1, testUser.id);
 
       // the test will fail so we will get the status back
       let status = await updateEvent(fakeEvent);
@@ -74,7 +74,7 @@ describe('Events crud', function () {
 
     it('Should return a 404 Http response when a non existing event is passed', async () => {
 
-      let fakeEvent = new Event("fakeEvent", "This is a fake event", -1, testUser.id);
+      let fakeEvent = new Event("fakeEvent", ["Event for Testing - description", "2021-05-25 23:00:00", "2021-05-27 02:00:00"], -1, testUser.id);
       let response = await deleteEvent(fakeEvent)
       //DELETE our testevent which was defined in the before hook
       assert.equal(response, 404);
