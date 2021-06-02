@@ -40,4 +40,4 @@ jobs:
         envkey_DB: ${{ secrets.DB }}
         envkey_API_TOKEN: ${{ secrets.API_TOKEN }}
       if: success()
-      run: bash startup.sh
+    - run: bash startup.sh
