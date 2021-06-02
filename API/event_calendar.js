@@ -35,7 +35,7 @@ module.exports.update_calendar_event = async(event,calendar_id) => {
     try {
 
          let calendar_event = await giveCalendarObject(event);
-         let response = await axios.put(`calender_events_endpoint/${calendar_id}`, querystring.stringify({...calendar_event}));
+         let response = await axios.put(`${calendar_events_endpoint}/${calendar_id}`, querystring.stringify({...calendar_event}));
          return response.data.id;
     }
     catch(err){
@@ -46,7 +46,7 @@ module.exports.update_calendar_event = async(event,calendar_id) => {
 module.exports.delete_calendar_event = async(calendar_id) => {
 
     try {
-     let response = await axios.delete(`calender_events_endpoint/${calendar_id}`);
+     let response = await axios.delete(`${calendar_events_endpoint}/${calendar_id}`);
      return response.status;
     }
     catch(err){
