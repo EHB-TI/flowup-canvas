@@ -48,7 +48,7 @@ let getUsage = () => {
 </heartbeat>`
 
         //  3. Validate previously created XML, change code attribute value if error
-        validator.validateXML(heartbeatXml, '../xsd/heartbeat.xsd', (err, result) => {
+        validator.validateXML(heartbeatXml, './xsd/heartbeat.xsd', (err, result) => {
 
             if (err) {
 
