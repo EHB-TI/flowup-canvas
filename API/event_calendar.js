@@ -2,7 +2,7 @@ const {axios,querystring}= require("./axios_config.js");
 
 const calendar_events_endpoint = "/calendar_events";
 
-const get_course_endpoint = `/accounts/1/courses/sis_course_id:${process.env.SIS_EVENTCOURSE_ID}`;
+const get_course_endpoint = `/accounts/${process.env.ACCOUNT}/courses/sis_course_id:${process.env.SIS_EVENTCOURSE_ID}`;
 
 async function getIDOfEventsCourse(){
   
