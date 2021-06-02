@@ -1,7 +1,7 @@
 const {axios,querystring}= require("./axios_config.js");
 const {add_user_to_event} = require("../API/eventsubscribe.js");
-const {create_event_announcement } = require("../API/event_announcements"); 
-
+const {create_event_announcement } = require("../API/event_announcements.js"); 
+const {create_calendar_event, update_calendar_event, delete_calendar_event } = require("../API/event_calendar.js"); 
 const get_group_endpoint= "/groups/";
 
 const get_group_categories_endpoint = "/group_categories";
@@ -9,6 +9,8 @@ const get_group_categories_endpoint = "/group_categories";
 const get_groups_endpoint = "/groups";
 
 const get_eventcourse_endpoint = `/courses/sis_course_id:${process.env.SIS_EVENTCOURSE_ID}`;
+
+const {insert_into_localdb, get_calendar_id, delete_calendar, calendar_id_in_localdb }= require("../DB/calendars.js");
 
 module.exports.createEvent = async (event) => {
 
@@ -41,6 +43,13 @@ module.exports.createEvent = async (event) => {
       // create a new announcement with the event data
       event.id = response.data.id;
       await create_event_announcement(event);
+
+      // add the event to the canvas calendar
+      let calendar_id = await create_calendar_event(event);
+
+      // store the calendar id in a local db
+      await insert_into_localdb(event.id, calendar_id);
+
       // add the organiser to the event
       await add_user_to_event(response.data.id, event.organiser_id);
       
@@ -51,7 +60,7 @@ module.exports.createEvent = async (event) => {
   }
   catch(error){
     
-    return error.response.status;
+    console.log(error);
     
   }
 }
@@ -70,10 +79,20 @@ module.exports.updateEvent = async (event) => {
     let response = await axios.put(`${get_group_endpoint}${event.id}`, querystring.stringify({...data}));
     
     if (response.status === 200){
+
+      let has_calendar_id = await calendar_id_in_localdb(event.id);
+
+      if (has_calendar_id){
+        let calendar_id = await get_calendar_id(event.id);
+        // update the event in the canvas calendar
+        await update_calendar_event(event,calendar_id);
+
+      }
       // create a new announcement with the updated event data
       await create_event_announcement(event);
-      return event.id;
-    }
+
+       return event.id;
+     } 
     
     
   }
@@ -88,6 +107,21 @@ module.exports.updateEvent = async (event) => {
 module.exports.deleteEvent = async (event) => {
 
   try {
+
+    // check if event has calendar_id
+    let has_calendar_id = await calendar_id_in_localdb(event.id);
+
+    if (has_calendar_id){
+      // get the calendar_id
+      let calendar_id = await get_calendar_id(event.id);
+        // delete the event in the canvas calendar
+        await delete_calendar_event(calendar_id);
+
+        // remove row from localdb
+        await delete_calendar(event.id,calendar_id);
+    }
+
+    // then delete the event
     let response = await axios.delete(`${get_group_endpoint}${event.id}`);
     return response.status;
   }

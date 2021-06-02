@@ -17,7 +17,6 @@ describe('Events crud', function () {
   // before hook that will run before all of the tests are run 
   before(async () => {
 
-
     //Create a user
     userID = await create_user(testUser.firstname, testUser.lastname, testUser.email);
     testUser.id = userID;
