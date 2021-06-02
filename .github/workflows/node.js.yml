@@ -29,8 +29,8 @@ jobs:
     - run: bash init.sh
     - run: npm ci
     - run: npm run build --if-present
-    env:
-      CI: true 
+      env:
+        CI: true 
     - run: CI=true npm test
     - run: bash startup.sh
 
