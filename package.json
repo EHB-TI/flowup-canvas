@@ -21,7 +21,7 @@
     "chai": "^4.3.4"
   },
   "scripts": {
-    "test": "mocha --timeout 10000",
+    "test": "mocha --timeout 10000 --exit",
     "consume": "node ./rabbitmq/receive.js"
   },
   "keywords": [],
