@@ -27,6 +27,7 @@ To use our application please provide a .env file within the directory that you 
 | PASSWORD | The password of the user of your database |
 | DB | The name of your database |
 | CALENDARSTABLE | The name of the table that you use to link an event to a calendar event |
+| ACCOUNT | The account id of your organization | 
 
 If all of that is done then you are ready to go to start our application
 
