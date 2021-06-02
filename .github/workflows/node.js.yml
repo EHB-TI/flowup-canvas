@@ -34,5 +34,5 @@ jobs:
         CI: true 
     - name: Publish Docker
       if: success()
-    - run: bash startup.sh
+      run: bash startup.sh
 
