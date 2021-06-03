@@ -13,8 +13,11 @@ Go to the directory that you just cloned and install all of the node dependencie
 cd flowup-canvas
 ./flowup-canvas$ npm install
 ```
+Go to the home directory of your machine and provide 2 environment files.
 
-To use our application please provide a .env file within the directory that you have cloned with the following environment variables
+The first one will be .env and this will contain the environment variables for your production environment , the second one will be .env.example and this one will contain the environment variables that will be used for your test environment. 
+
+For an example please check the .env.example file in this repository. You can find the detailled information about each environment variable in the table below.
 
 | Environment variable  | Value |
 | ------------- | ------------- |
