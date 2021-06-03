@@ -1,1 +1,3 @@
 echo "IP2021" | sudo -S cp /home/canvas/.env.example  /home/canvas/actions-runner/_work/flowup-canvas/flowup-canvas/.env
+cd /home/canvas/actions-runner/_work/flowup-canvas/flowup-canvas
+sed -i 's/USER.*/USER=root/' .env  
