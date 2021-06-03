@@ -72,4 +72,5 @@ describe('Subscribe a user to an event', function() {
     //Delete Event
     await deleteEvent(testEvent);
   });
+  
 });
